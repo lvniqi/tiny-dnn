@@ -10,7 +10,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-
+#include "tiny_dnn/my_bit_map.h"
 #include "tiny_dnn/tiny_dnn.h"
 
 using namespace tiny_dnn;
@@ -88,6 +88,7 @@ void sample1_convnet(const string& data_dir) {
   parse_mnist_images(test_images_path, &test_images, -1.0, 1.0, 2, 2);
 
   tensor_bit_t test_images_bit;
+  bitset<1000> bv;
   parse_mnist_images(train_images_path, &test_images_bit, -1.0, 1.0, 2, 2);
   for (const auto &image : test_images_bit) {
 	  std::cout << "size:" << image.size() << std::endl;

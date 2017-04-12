@@ -268,10 +268,13 @@ std::vector<Result> map_(const std::vector<T> &vec, Pred p) {
 enum class vector_type : int32_t {
   // 0x0001XXX : in/out data
   data = 0x0001000,  // input/output data, fed by other layer or input channel
-
+  bit_data = 0x0001001,  // input/output data, fed by other layer or input channel
   // 0x0002XXX : trainable parameters, updated for each back propagation
   weight = 0x0002000,
   bias   = 0x0002001,
+
+  bit_weight = 0x0002002,
+  bit_bias = 0x0002003,
 
   label = 0x0004000,
   aux   = 0x0010000  // layer-specific storage
