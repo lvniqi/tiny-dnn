@@ -88,9 +88,10 @@ void sample1_convnet(const string& data_dir) {
   parse_mnist_images(test_images_path, &test_images, -1.0, 1.0, 2, 2);
 
   tensor_bit_t test_images_bit;
-  bitset<1000> bv;
+  bitset<20> bs1,bs2;
+  cout << bs1 << (bs1&bs2) << endl;
   parse_mnist_images(train_images_path, &test_images_bit, -1.0, 1.0, 2, 2);
-  for (const auto &image : test_images_bit) {
+  /*for (const auto &image : test_images_bit) {
 	  std::cout << "size:" << image.size() << std::endl;
 	  for (int i = 0; i < 32; i++) {
 		  for (int j = 0; j < 32; j++) {
@@ -98,7 +99,7 @@ void sample1_convnet(const string& data_dir) {
 		  }
 		  std::cout << std::endl;
 	  }
-  }
+  }*/
   std::cout << "start learning" << std::endl;
 
   progress_display disp(train_images.size());
