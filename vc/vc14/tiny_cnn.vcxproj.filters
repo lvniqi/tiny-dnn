@@ -267,6 +267,15 @@
     <ClInclude Include="..\..\tiny_dnn\layers\slice_layer.h">
       <Filter>layers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\tiny_dnn\layers\convolutional_bit_layer.h">
+      <Filter>layers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tiny_dnn\layers\feedforward_bit_layer.h">
+      <Filter>layers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tiny_dnn\layers\bit_layer.h">
+      <Filter>layers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="activations">

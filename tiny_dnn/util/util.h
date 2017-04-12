@@ -55,6 +55,9 @@ typedef std::vector<float_t, aligned_allocator<float_t, 64>> vec_t;
 
 typedef std::vector<vec_t> tensor_t;
 
+typedef std::vector<unsigned char, aligned_allocator<unsigned char, 64>> vec_bit_t;
+typedef std::vector<vec_bit_t> tensor_bit_t;
+
 enum class net_phase { train, test };
 
 enum class padding {

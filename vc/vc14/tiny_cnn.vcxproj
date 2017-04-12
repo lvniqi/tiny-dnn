@@ -64,7 +64,10 @@
     <ClInclude Include="..\..\tiny_dnn\io\layer_factory.h" />
     <ClInclude Include="..\..\tiny_dnn\layers\average_unpooling_layer.h" />
     <ClInclude Include="..\..\tiny_dnn\layers\batch_normalization_layer.h" />
+    <ClInclude Include="..\..\tiny_dnn\layers\bit_layer.h" />
+    <ClInclude Include="..\..\tiny_dnn\layers\convolutional_bit_layer.h" />
     <ClInclude Include="..\..\tiny_dnn\layers\deconvolutional_layer.h" />
+    <ClInclude Include="..\..\tiny_dnn\layers\feedforward_bit_layer.h" />
     <ClInclude Include="..\..\tiny_dnn\layers\max_unpooling_layer.h" />
     <ClInclude Include="..\..\tiny_dnn\layers\power_layer.h" />
     <ClInclude Include="..\..\tiny_dnn\layers\quantized_convolutional_layer.h" />
@@ -175,13 +178,14 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <PreprocessorDefinitions>_MBCS;CNN_USE_AVX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;CNN_USE_AVX;NDEBUG;__AVX2__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
