@@ -3,15 +3,22 @@ template<std::size_t BITSIZE>
 struct bitset
 {
 public:
-	const static std::size_t int_size = BITSIZE / 32 + (BITSIZE & 0x07 ? 1 : 0);
+	const static std::size_t int_size = (BITSIZE+31) / 32;
 public:
 	bitset()
 	{
 		this->reset();
 	}
+
+	bitset(const std::vector<uint32_t>& temp)
+	{
+		for (int i = 0; i < int_size; i++) {
+			this->data[i] = temp[i];
+		}
+	}
 	bitset(const bitset& old)
 	{
-		memcpy(this->data, old.data, int_size * sizeof(int32_t));
+		memcpy(this->data, old.data, int_size * sizeof(uint32_t));
 	}
 	size_t size()const
 	{
@@ -20,7 +27,7 @@ public:
 
 	bool bit(size_t id)const
 	{
-		return (data[id / 32] >> (id & 0x07)) & 0x01;
+		return (data[id / 32] >> (id & 0x1f)) & 0x01;
 	};
 	bool operator[](size_t id)const
 	{
@@ -29,38 +36,46 @@ public:
 
 	void set()
 	{
-		memset(data, 0xFF, int_size*sizeof(int32_t));
+		memset(data, 0xFFFFFFFF, int_size*sizeof(uint32_t));
 	}
 	bool set(size_t id)
 	{
-		int32_t& b = data[id / 32];
-		b |= 1 << (id & 0x07);
+		uint32_t& b = data[id / 32];
+		b |= 1 << (id & 0x1f);
 		return true;
 	}
 	void reset()
 	{
-		memset(data, 0, int_size * sizeof(int32_t));
+		memset(data, 0, int_size * sizeof(uint32_t));
 	}
 	bool reset(size_t id)
 	{
-		int32_t& b = data[id / 32];
-		b &= ~(1 << (id & 0x07));
+		uint32_t& b = data[id / 32];
+		b &= ~(1 << (id & 0x1f));
 		return false;
 	}
 	
 	 bitset operator &(const bitset& a) {
-		return a;
+		bitset<BITSIZE> result;
+		for (int i = 0; i < int_size; i++) {
+			result.data[i] = this->data[i] & a.data[i];
+		}
+		return result;
 	}
-	friend std::ostream & operator<<(std::ostream &os, const bitset &c);
+	bitset operator ^(const bitset& a) {
+		 bitset result;
+		 for (int i = 0; i < int_size; i++) {
+			 result.data[i] = this->data[i] ^ a.data[i];
+		 }
+		 return result;
+	}
+	friend std::ostream & operator<<(std::ostream &os, const bitset &c) {
+		os << "bit size:" << BITSIZE << std::endl;
+		for (int bit = 0; bit < BITSIZE; bit++) {
+			os << (int)c.bit(bit) << ' ';
+		}
+		return os;
+	}
 public:
-	int32_t data[int_size];
+	uint32_t data[int_size];
 };
-
-template<std::size_t BITSIZE>
-std::ostream & operator << (std::ostream &os,bitset<BITSIZE> &c){
-	os <<"bit size:"<< BITSIZE << std::endl;
-	for (int bit = 0; bit < BITSIZE; bit++) {
-		os << (int)c.bit(bit) << ' ';
-	}
-	return os;
-}
