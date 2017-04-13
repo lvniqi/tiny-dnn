@@ -31,12 +31,14 @@ namespace tiny_dnn {
 
 class node;
 class layer;
+class bit_layer;
 class edge;
 
 typedef node *nodeptr_t;
 typedef std::shared_ptr<edge> edgeptr_t;
 
 typedef layer *layerptr_t;
+typedef bit_layer *bit_layerptr_t;
 
 /**
  * base class of all kind of tinny-cnn data
@@ -74,6 +76,11 @@ class node : public std::enable_shared_from_this<node> {
                       layerptr_t tail,
                       serial_size_t head_index,
                       serial_size_t tail_index);
+
+  friend void connect(bit_layerptr_t head,
+					  bit_layerptr_t tail,
+					  serial_size_t head_index,
+					  serial_size_t tail_index);
 
   mutable std::vector<edgeptr_t> prev_;
   mutable std::vector<edgeptr_t> next_;
