@@ -65,13 +65,26 @@ public:
 		 }
 		 return result;
 	}
+	int count(){
+		int sum = 0;
+		for (int i = 0; i < int_size-1; i++) {
+			sum += _mm_popcnt_u32(data[i]);
+		}
+		int last_bit = BITSIZE & 0x1f;
+		if (last_bit) {
+			data[int_size - 1] &= (~(0xffffffff << last_bit));
+		}
+		sum += _mm_popcnt_u32(data[int_size-1]);
+		return sum;
+	}
 	friend std::ostream & operator<<(std::ostream &os, const bitset &c) {
 		os << "bit size:" << BITSIZE << std::endl;
 		for (int bit = 0; bit < BITSIZE; bit++) {
 			os << (int)c.bit(bit) << ' ';
 		}
+		os << std::endl;
 		return os;
-	}	
+	}
 	constexpr size_t size() const
 	{	// return size of bitset
 		return (BITSIZE);
