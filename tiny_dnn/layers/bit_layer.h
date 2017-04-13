@@ -36,21 +36,21 @@ namespace tiny_dnn {
 	* - out_shape           ... specify output data shapes
 	* - layer_type          ... name of layer
 	**/
-	class layer : public node {
+	class bit_layer : public node {
 	public:
-		friend void connection_mismatch(const layer &from, const layer &to);
+		friend void connection_mismatch(const bit_layer &from, const bit_layer &to);
 
-		virtual ~layer() = default;
+		virtual ~bit_layer() = default;
 
 		/**
-		* @brief Defaul layer constructor that instantiates a N-input, M-output
-		*layer
+		* @brief Defaul bit_layer constructor that instantiates a N-input, M-output
+		*bit_layer
 		*
 		* @param in_type[N] type of input vector (data, weight, bias...)
 		* @param out_type[M] type of output vector
 		*
 		**/
-		layer(const std::vector<vector_type> &in_type,
+		bit_layer(const std::vector<vector_type> &in_type,
 			const std::vector<vector_type> &out_type)
 			: node(static_cast<serial_size_t>(in_type.size()),
 				static_cast<serial_size_t>(out_type.size())),
@@ -65,12 +65,12 @@ namespace tiny_dnn {
 			trainable_ = true;
 		}
 
-		layer(const layer &) = default;
-		layer &operator=(const layer &) = default;
+		bit_layer(const bit_layer &) = default;
+		bit_layer &operator=(const bit_layer &) = default;
 
 #ifdef CNN_USE_DEFAULT_MOVE_CONSTRUCTORS
-		layer(layer &&) = default;
-		layer &operator=(layer &&) = default;
+		bit_layer(bit_layer &&) = default;
+		bit_layer &operator=(bit_layer &&) = default;
 #endif
 
 		void set_parallelize(bool parallelize) { parallelize_ = parallelize; }
@@ -109,10 +109,10 @@ namespace tiny_dnn {
 
 		std::shared_ptr<core::backend> backend() { return backend_; }
 
-		///< number of incoming edges in this layer
+		///< number of incoming edges in this bit_layer
 		serial_size_t in_channels() const { return in_channels_; }
 
-		///< number of outgoing edges in this layer
+		///< number of outgoing edges in this bit_layer
 		serial_size_t out_channels() const { return out_channels_; }
 
 		serial_size_t in_data_size() const {
@@ -198,7 +198,7 @@ namespace tiny_dnn {
 		std::vector<edgeptr_t> outputs() const {
 			std::vector<edgeptr_t> nodes(out_channels_);
 			for (serial_size_t i = 0; i < out_channels_; i++) {
-				nodes[i] = const_cast<layerptr_t>(this)->ith_out_node(i);
+				nodes[i] = const_cast<bit_layerptr_t>(this)->ith_out_node(i);
 			}
 			return nodes;
 		}
@@ -226,7 +226,7 @@ namespace tiny_dnn {
 			for (serial_size_t i = 0; i < out_channels_; i++) {
 				if (out_type_[i] == vector_type::data) {
 					out.push_back(
-						*(const_cast<layerptr_t>(this))->ith_out_node(i)->get_data());
+						*(const_cast<bit_layerptr_t>(this))->ith_out_node(i)->get_data());
 				}
 			}
 			return out;
@@ -243,8 +243,8 @@ namespace tiny_dnn {
 		/**
 		* return output value range
 		* used only for calculating target value from label-id in final(output)
-		*layer
-		* override properly if the layer is intended to be used as output layer
+		*bit_layer
+		* override properly if the bit_layer is intended to be used as output bit_layer
 		**/
 		virtual std::pair<float_t, float_t> out_value_range() const {
 			return{ float_t{ 0.0 }, float_t{ 1.0 } };
@@ -290,25 +290,25 @@ namespace tiny_dnn {
 		/////////////////////////////////////////////////////////////////////////
 		// setter
 		template <typename WeightInit>
-		layer &weight_init(const WeightInit &f) {
+		bit_layer &weight_init(const WeightInit &f) {
 			weight_init_ = std::make_shared<WeightInit>(f);
 			return *this;
 		}
 
 		template <typename BiasInit>
-		layer &bias_init(const BiasInit &f) {
+		bit_layer &bias_init(const BiasInit &f) {
 			bias_init_ = std::make_shared<BiasInit>(f);
 			return *this;
 		}
 
 		template <typename WeightInit>
-		layer &weight_init(std::shared_ptr<WeightInit> f) {
+		bit_layer &weight_init(std::shared_ptr<WeightInit> f) {
 			weight_init_ = f;
 			return *this;
 		}
 
 		template <typename BiasInit>
-		layer &bias_init(std::shared_ptr<BiasInit> f) {
+		bit_layer &bias_init(std::shared_ptr<BiasInit> f) {
 			bias_init_ = f;
 			return *this;
 		}
@@ -665,18 +665,18 @@ namespace tiny_dnn {
 		* generate layer from cereal's Archive
 		**/
 		template <typename InputArchive>
-		static std::shared_ptr<layer> load_layer(InputArchive &ia);
+		static std::shared_ptr<bit_layer> load_layer(InputArchive &ia);
 
 		template <typename OutputArchive>
-		static void save_layer(OutputArchive &oa, const layer &l);
+		static void save_layer(OutputArchive &oa, const bit_layer &l);
 
 		template <class Archive>
 		void serialize_prolog(Archive &ar);
 
 	protected:
-		/** Flag indication whether the layer/node is initialized */
+		/** Flag indication whether the bit_layer/node is initialized */
 		bool initialized_;
-		/** Flag indicating whether the layer/node operations ara paralellized */
+		/** Flag indicating whether the bit_layer/node operations ara paralellized */
 		bool parallelize_;
 		/** The number of input vectors/edges */
 		serial_size_t in_channels_;
@@ -690,7 +690,7 @@ namespace tiny_dnn {
 		core::backend_t backend_type_;
 		/** The backend instance (deprecated) */
 		std::shared_ptr<core::backend> backend_;
-		/** Pointer to the device on which the layer/node will run */
+		/** Pointer to the device on which the bit_layer/node will run */
 		Device *device_ptr_ = nullptr;
 		/** Used in update_weight method. Kept as a member variable to reduce
 		* frequent
@@ -698,7 +698,7 @@ namespace tiny_dnn {
 		vec_t weights_diff_;
 
 	private:
-		/** Flag indicating whether the layer/node parameters are trainable */
+		/** Flag indicating whether the bit_layer/node parameters are trainable */
 		bool trainable_;
 		/** Pointer to the function for weights initialization */
 		std::shared_ptr<weight_init::function> weight_init_;
@@ -712,7 +712,7 @@ namespace tiny_dnn {
 		*
 		* Graphical explanation:
 		*
-		*     nullptr -- |edge| -- prev(i) ---- |layer|
+		*     nullptr -- |edge| -- prev(i) ---- |bit_layer|
 		*               nullptr -- prev(i+1) -´
 		*/
 		void alloc_input(serial_size_t i) const {
@@ -728,13 +728,13 @@ namespace tiny_dnn {
 		*
 		* Graphical explanation:
 		*
-		*     |layer| -- next(i) ---- |edge|
+		*     |bit_layer| -- next(i) ---- |edge|
 		*             `- next(i+1) -- nullptr
 		*/
 		void alloc_output(serial_size_t i) const {
 			// the created outcoming will have the current layer as the
 			// previous node.
-			next_[i] = std::make_shared<edge>(const_cast<layer *>(this), out_shape()[i],
+			next_[i] = std::make_shared<edge>(const_cast<bit_layer *>(this), out_shape()[i],
 				out_type_[i]);
 		}
 
@@ -785,12 +785,12 @@ namespace tiny_dnn {
 		*/
 		const vec_t *get_weight_data(serial_size_t i) const {
 			assert(is_trainable_weight(in_type_[i]));
-			return &(*(const_cast<layerptr_t>(this)->ith_in_node(i)->get_data()))[0];
+			return &(*(const_cast<bit_layerptr_t>(this)->ith_in_node(i)->get_data()))[0];
 		}
 	};
 
-	inline void connect(layerptr_t head,
-		layerptr_t tail,
+	inline void connect(bit_layerptr_t head,
+		bit_layerptr_t tail,
 		serial_size_t head_index = 0,
 		serial_size_t tail_index = 0) {
 		auto out_shape = head->out_shape()[head_index];
@@ -810,48 +810,48 @@ namespace tiny_dnn {
 		tail->prev_[tail_index]->add_next_node(tail);
 	}
 
-	inline layer &operator<<(layer &lhs, layer &rhs) {
+	inline bit_layer &operator<<(bit_layer &lhs, bit_layer &rhs) {
 		connect(&lhs, &rhs);
 		return rhs;
 	}
 
 	template <typename Char, typename CharTraits>
 	std::basic_ostream<Char, CharTraits> &operator<<(
-		std::basic_ostream<Char, CharTraits> &os, const layer &v) {
+		std::basic_ostream<Char, CharTraits> &os, const bit_layer &v) {
 		v.save(os);
 		return os;
 	}
 
 	template <typename Char, typename CharTraits>
 	std::basic_istream<Char, CharTraits> &operator>>(
-		std::basic_istream<Char, CharTraits> &os, layer &v) {
+		std::basic_istream<Char, CharTraits> &os, bit_layer &v) {
 		v.load(os);
 		return os;
 	}
 
 	// error message functions
 
-	inline void connection_mismatch(const layer &from, const layer &to) {
+	inline void connection_mismatch(const bit_layer &from, const bit_layer &to) {
 		std::ostringstream os;
 
 		os << std::endl;
-		os << "output size of Nth layer must be equal to input of (N+1)th layer\n";
+		os << "output size of Nth bit_layer must be equal to input of (N+1)th bit_layer\n";
 
-		os << "layerN:   " << std::setw(12) << from.layer_type()
+		os << "bit_layerN:   " << std::setw(12) << from.layer_type()
 			<< " in:" << from.in_data_size() << "(" << from.in_shape() << "), "
 			<< "out:" << from.out_data_size() << "(" << from.out_shape() << ")\n";
 
-		os << "layerN+1: " << std::setw(12) << to.layer_type()
+		os << "bit_layerN+1: " << std::setw(12) << to.layer_type()
 			<< " in:" << to.in_data_size() << "(" << to.in_shape() << "), "
 			<< "out:" << to.out_data_size() << "(" << to.out_shape() << ")\n";
 
 		os << from.out_data_size() << " != " << to.in_data_size() << std::endl;
 		std::string detail_info = os.str();
 
-		throw nn_error("layer dimension mismatch!" + detail_info);
+		throw nn_error("bit_layer dimension mismatch!" + detail_info);
 	}
 
-	inline void data_mismatch(const layer &layer, const vec_t &data) {
+	inline void data_mismatch(const bit_layer &layer, const vec_t &data) {
 		std::ostringstream os;
 
 		os << std::endl;
@@ -880,14 +880,14 @@ namespace tiny_dnn {
 	}
 
 	template <typename T, typename U>
-	void graph_traverse(layer *root_node, T &&node_callback, U &&edge_callback) {
-		std::unordered_set<layer *> visited;
-		std::queue<layer *> S;
+	void graph_traverse(bit_layer *root_node, T &&node_callback, U &&edge_callback) {
+		std::unordered_set<bit_layer *> visited;
+		std::queue<bit_layer *> S;
 
 		S.push(root_node);
 
 		while (!S.empty()) {
-			layer *curr = S.front();
+			bit_layer *curr = S.front();
 			S.pop();
 			visited.insert(curr);
 
@@ -902,7 +902,7 @@ namespace tiny_dnn {
 			for (auto p : prev) {
 				// TODO(nyanp): refactoring
 				// which type of refactoring do you have in mind for that?
-				layer *l = dynamic_cast<layer *>(p);
+				bit_layer *l = dynamic_cast<bit_layer *>(p);
 				if (visited.find(l) == visited.end()) {
 					S.push(l);
 				}
@@ -912,7 +912,7 @@ namespace tiny_dnn {
 			for (auto n : next) {
 				// TODO(nyanp): refactoring
 				// which type of refactoring do you have in mind for that?
-				layer *l = dynamic_cast<layer *>(n);
+				bit_layer *l = dynamic_cast<bit_layer *>(n);
 				if (visited.find(l) == visited.end()) {
 					S.push(l);
 				}
