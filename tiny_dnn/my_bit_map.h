@@ -20,10 +20,6 @@ public:
 	{
 		memcpy(this->data, old.data, int_size * sizeof(uint32_t));
 	}
-	size_t size()const
-	{
-		return BITSIZE;
-	}
 
 	bool bit(size_t id)const
 	{
@@ -55,14 +51,14 @@ public:
 		return false;
 	}
 	
-	 bitset operator &(const bitset& a) {
+	 bitset operator &(const bitset& a) const {
 		bitset<BITSIZE> result;
 		for (int i = 0; i < int_size; i++) {
 			result.data[i] = this->data[i] & a.data[i];
 		}
 		return result;
 	}
-	bitset operator ^(const bitset& a) {
+	bitset operator ^(const bitset& a) const {
 		 bitset result;
 		 for (int i = 0; i < int_size; i++) {
 			 result.data[i] = this->data[i] ^ a.data[i];
@@ -75,7 +71,11 @@ public:
 			os << (int)c.bit(bit) << ' ';
 		}
 		return os;
+	}	
+	constexpr size_t size() const
+	{	// return size of bitset
+		return (BITSIZE);
 	}
 public:
 	uint32_t data[int_size];
-};
+}; 

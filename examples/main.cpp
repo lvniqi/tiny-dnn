@@ -91,7 +91,8 @@ void sample1_convnet(const string& data_dir) {
   vector<uint32_t> bs1_t;
   bs1_t.push_back(0xffffff00);
   bitset<20> bs1 = bs1_t, bs2;
-  cout << bs1 << (bs1^bs2) << endl;
+  bitset<bs1.size()> bs3;
+  cout << bs1 << bs3 << (bs1^bs2) << endl;
   //cout << bs1 << endl;
   parse_mnist_images(train_images_path, &test_images_bit, -1.0, 1.0, 2, 2);
   /*for (const auto &image : test_images_bit) {
